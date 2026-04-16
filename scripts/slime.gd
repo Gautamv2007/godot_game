@@ -9,7 +9,25 @@ var direction = 1
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
+var is_dead := false
+
+@onready var game_manager: Node = %GameManager
+
+
+func die():
+	if is_dead:
+		return
+	is_dead = true
+	
+	set_process(false)
+	set_physics_process(false)
+	game_manager.add_score()
+	queue_free()
+
 func _process(delta: float) -> void:
+	if not is_instance_valid(ray_cast_right) or not is_instance_valid(ray_cast_left):
+		return
+	
 	if ray_cast_right.is_colliding():
 		direction = -1
 		animated_sprite.flip_h = true
