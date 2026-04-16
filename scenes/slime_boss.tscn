@@ -1,31 +1,44 @@
 [gd_scene format=3 uid="uid://cl64xacfegs20"]
 
-[ext_resource type="Script" uid="uid://8i8xhrujx6dp" path="res://scripts/slime.gd" id="1_r2idg"]
+[ext_resource type="Script" uid="uid://uqmqmreujcd2" path="res://scripts/slime_boss.gd" id="1_r2idg"]
 [ext_resource type="Texture2D" uid="uid://dq3jjwquhgwlv" path="res://assets/sprites/slime_purple.png" id="2_r2idg"]
-[ext_resource type="PackedScene" uid="uid://bf4kudurb5rki" path="res://scenes/kill_zone.tscn" id="3_ekip0"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_5gq7b"]
-atlas = ExtResource("2_r2idg")
-region = Rect2(0, 24, 24, 24)
+[ext_resource type="Script" uid="uid://cdfgo6la0bkkt" path="res://scripts/kill_zone_boss.gd" id="3_5gq7b"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ekip0"]
 atlas = ExtResource("2_r2idg")
-region = Rect2(24, 24, 24, 24)
+region = Rect2(0, 48, 24, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fkk8n"]
 atlas = ExtResource("2_r2idg")
-region = Rect2(48, 24, 24, 24)
+region = Rect2(24, 48, 24, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ciyni"]
 atlas = ExtResource("2_r2idg")
+region = Rect2(48, 48, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cpcnc"]
+atlas = ExtResource("2_r2idg")
+region = Rect2(72, 48, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mg8ys"]
+atlas = ExtResource("2_r2idg")
+region = Rect2(0, 24, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e8e5a"]
+atlas = ExtResource("2_r2idg")
+region = Rect2(24, 24, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mw00e"]
+atlas = ExtResource("2_r2idg")
+region = Rect2(48, 24, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h4vd5"]
+atlas = ExtResource("2_r2idg")
 region = Rect2(72, 24, 24, 24)
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_v5wyi"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_6w5tl"]
 animations = [{
 "frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_5gq7b")
-}, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_ekip0")
 }, {
@@ -34,36 +47,59 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_ciyni")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cpcnc")
+}],
+"loop": false,
+"name": &"hit",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mg8ys")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e8e5a")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mw00e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h4vd5")
 }],
 "loop": true,
-"name": &"default",
+"name": &"idle",
 "speed": 8.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_0l8pv"]
-size = Vector2(38, 13)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tgebq"]
+size = Vector2(34, 22)
 
-[node name="Slime" type="Node2D" unique_id=1973231285]
-position = Vector2(0, -12)
+[node name="Slime_Boss" type="Node2D" unique_id=170012848]
+light_mask = 2
 script = ExtResource("1_r2idg")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=289220644]
-position = Vector2(1.9073486e-06, -17.000002)
-scale = Vector2(2.75, 2.375)
-sprite_frames = SubResource("SpriteFrames_v5wyi")
-autoplay = "default"
-frame_progress = 0.5224416
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1856484965]
+position = Vector2(0, -28.000004)
+scale = Vector2(2.4270833, 2.3333328)
+sprite_frames = SubResource("SpriteFrames_6w5tl")
+animation = &"hit"
+autoplay = "idle"
 
-[node name="KillZone" parent="." unique_id=1792395430 instance=ExtResource("3_ekip0")]
+[node name="KillZone_Boss" type="Area2D" parent="." unique_id=1657145451]
+script = ExtResource("3_5gq7b")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="KillZone" unique_id=270269631]
-position = Vector2(0, 4.5)
-shape = SubResource("RectangleShape2D_0l8pv")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="KillZone_Boss" unique_id=2014471934]
+position = Vector2(0, -11)
+shape = SubResource("RectangleShape2D_tgebq")
 
-[node name="RayCastRight" type="RayCast2D" parent="KillZone" unique_id=2071661461]
-position = Vector2(0, 6)
-target_position = Vector2(20, 0)
+[node name="RayCastLeft" type="RayCast2D" parent="KillZone_Boss" unique_id=1209393104]
+position = Vector2(0, -13)
+target_position = Vector2(-18, 0)
 
-[node name="RayCastLeft" type="RayCast2D" parent="KillZone" unique_id=674521646]
-position = Vector2(0, 6)
-target_position = Vector2(-20, 0)
+[node name="RayCastRight" type="RayCast2D" parent="KillZone_Boss" unique_id=1374449586]
+position = Vector2(0, -13)
+target_position = Vector2(18, 0)
+
+[connection signal="body_entered" from="KillZone_Boss" to="." method="_on_body_entered"]

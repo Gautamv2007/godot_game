@@ -2,12 +2,12 @@ extends Node2D
 
 const SPEED = 60
 
-const HEALTH_REDUCE = 10
+const HEALTH_REDUCE = 25
 
 var direction = 1
 
-@onready var ray_cast_right: RayCast2D = $KillZone/RayCastRight
-@onready var ray_cast_left: RayCast2D = $KillZone/RayCastLeft  
+@onready var ray_cast_left: RayCast2D = $KillZone_Boss/RayCastLeft
+@onready var ray_cast_right: RayCast2D = $KillZone_Boss/RayCastRight
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -38,4 +38,7 @@ func _process(delta: float) -> void:
 		animated_sprite.flip_h = false
 		
 	position.x += direction *  SPEED * delta
-	
+
+
+func _on_body_entered(body: Node2D) -> void:
+	pass # Replace with function body.
