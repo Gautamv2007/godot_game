@@ -7,9 +7,7 @@ signal healthChanged
 
 @export var maxHealth: int = 200
 
-# Removed @onready so it doesn't wait for child nodes
 var currentHealth: int 
-
 var direction = 1
 
 @onready var ray_cast_right: RayCast2D = $KillZone/RayCastRight
@@ -17,13 +15,12 @@ var direction = 1
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 
 var is_dead := false
+var waiting_for_input := false # --- NEW: Flag to listen for Enter key
 
 @onready var game_manager: Node = %GameManager
 
-# --- NEW: Initialize health properly ---
 func _ready():
 	currentHealth = maxHealth
-	# Tell the health bar to update now that the boss is fully loaded
 	healthChanged.emit() 
 
 func take_damage(amount: int):
@@ -31,14 +28,9 @@ func take_damage(amount: int):
 		return
 	
 	currentHealth -= amount
-	
-	# Play the hit animation! 
-	# (Make sure "hit" is the exact name in your SpriteFrames)
 	animated_sprite.play("hit") 
+	healthChanged.emit()
 	
-	healthChanged.emit() # Tell the health bar to update
-	
-	# If health drops to 0, trigger the death logic
 	if currentHealth <= 0:
 		die()
 
@@ -47,12 +39,41 @@ func die():
 		return
 	is_dead = true
 	
-	set_process(false)
-	set_physics_process(false)
 	game_manager.add_score()
-	queue_free()
+	
+	# 1. Create the Victory Screen
+	var canvas = CanvasLayer.new() 
+	var label = Label.new()
+	# \n creates a line break. We use two to create a gap before the instructions!
+	label.text = "You have killed the boss of this level.\nOther levels coming soon...\n\nPress Enter to go to the Main Menu" 
+	
+	label.add_theme_font_size_override("font_size", 128) 
+	label.add_theme_color_override("font_color", Color.YELLOW) # Yellow looks like a Victory!
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.set_anchors_preset(Control.PRESET_FULL_RECT) 
+	
+	canvas.add_child(label)
+	add_child(canvas)
+	
+	waiting_for_input = true
+	
+	animated_sprite.hide() # Makes the boss visually disappear
+	if has_node("KillZone"):
+		$KillZone.queue_free() # Deletes the KillZone so the player is perfectly safe
 
 func _process(delta: float) -> void:
+	# --- NEW: Check for Enter Key ---
+	if waiting_for_input:
+		if Input.is_key_pressed(KEY_ENTER):
+			# Make sure this is the correct path to your main menu!
+			get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+		return # Stop any other code below from running
+
+	# If the boss is dead, don't let it move
+	if is_dead:
+		return
+
 	if not is_instance_valid(ray_cast_right) or not is_instance_valid(ray_cast_left):
 		return
 	
@@ -65,9 +86,6 @@ func _process(delta: float) -> void:
 		
 	position.x += direction * SPEED * delta
 	
-# Make sure this signal is connected via the Node panel in the editor!
 func _on_animated_sprite_2d_animation_finished() -> void:
 	if animated_sprite.animation == "hit":
-		# Change "default" to whatever your boss's normal walking animation is named!
-		# It might be "walk", "idle", or "run" depending on how you named it.
 		animated_sprite.play("idle")

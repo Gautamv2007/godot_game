@@ -10,12 +10,40 @@ signal healthChanged
 var is_attacking := false
 var is_hurt := false
 var is_dead := false
+var waiting_for_input := false
 
 @export var maxHealth = 100
 @onready var currentHealth:int = maxHealth
 
 func _physics_process(delta: float) -> void:
-	# If dead or hurt, apply gravity and friction, but don't allow player input
+	if waiting_for_input:
+		# This looks directly at your keyboard's Enter key! No Input Map needed.
+		if Input.is_key_pressed(KEY_ENTER):
+			get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+		return # Stop the rest of the physics code from running
+
+	# 2. World Boundary Check (Falling into the pit)
+	if global_position.y > 1000 and not is_dead:
+		is_dead = true 
+		waiting_for_input = true
+		
+		# Create the "YOU DIED" screen
+		var canvas = CanvasLayer.new() 
+		var label = Label.new()
+		label.text = "YOU DIED\nPress Enter to return to Main Menu" 
+		
+		label.add_theme_font_size_override("font_size", 128) 
+		label.add_theme_color_override("font_color", Color.BLACK)
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		label.set_anchors_preset(Control.PRESET_FULL_RECT) 
+		
+		canvas.add_child(label)
+		add_child(canvas)
+		
+		# Freeze the player in the air
+		velocity = Vector2.ZERO 
+		return
 	if is_dead or is_hurt:
 		if not is_on_floor():
 			velocity += get_gravity() * delta
@@ -96,5 +124,6 @@ func _on_AnimatedSprite2D_animation_finished():
 	elif animated_sprite.animation == "hit":
 		is_hurt = false
 	elif animated_sprite.animation == "death":
-		# Pause the game exactly when the death animation finishes
-		get_tree().paused = true
+		# Go back to the main menu when the death animation finishes
+		# Make sure "res://main_menu.tscn" exactly matches your actual file name!
+		get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
