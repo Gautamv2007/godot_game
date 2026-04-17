@@ -6,9 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://s5ace3re5e1n" path="res://assets/sprites/world_tileset.png" id="2_yqjtg"]
 [ext_resource type="PackedScene" uid="uid://d36kyf5vaua6w" path="res://scenes/coin.tscn" id="4_lbhrr"]
 [ext_resource type="PackedScene" uid="uid://bf4kudurb5rki" path="res://scenes/kill_zone.tscn" id="5_iywne"]
-[ext_resource type="PackedScene" uid="uid://b8ooog2r7fepl" path="res://scenes/slime.tscn" id="6_p57ef"]
 [ext_resource type="FontFile" uid="uid://b63fpxrp16bmi" path="res://assets/fonts/PixelOperator8.ttf" id="7_u5sy4"]
-[ext_resource type="AudioStream" uid="uid://b1kwxsc4ngf0l" path="res://assets/music/time_for_adventure.mp3" id="9_0tnpc"]
 [ext_resource type="PackedScene" uid="uid://cl64xacfegs20" path="res://scenes/slime_boss.tscn" id="10_vtaks"]
 [ext_resource type="Script" uid="uid://d2kei3ecqgd6t" path="res://scripts/healthBar.gd" id="11_kvpfn"]
 
@@ -380,19 +378,6 @@ theme_override_colors/font_color = Color(0.012617188, 0.012617188, 0.012617188, 
 theme_override_fonts/font = ExtResource("7_u5sy4")
 text = "Space to Jump"
 
-[node name="Music" type="AudioStreamPlayer2D" parent="." unique_id=272424826]
-stream = ExtResource("9_0tnpc")
-volume_db = 7.29
-autoplay = true
-
-[node name="Slimes" type="Node" parent="." unique_id=859124242]
-
-[node name="Slime" parent="Slimes" unique_id=1973231285 instance=ExtResource("6_p57ef")]
-position = Vector2(526, 68)
-
-[node name="Slime2" parent="Slimes" unique_id=1470403757 instance=ExtResource("6_p57ef")]
-position = Vector2(628, 68)
-
 [node name="CanvasLayer2" type="CanvasLayer" parent="." unique_id=670874264]
 
 [node name="ProgressBar" type="ProgressBar" parent="CanvasLayer2" unique_id=812341460]
@@ -403,5 +388,5 @@ offset_bottom = 175.0
 value = 100.0
 script = ExtResource("11_kvpfn")
 
-[node name="Slime_Boss" parent="." unique_id=170012848 instance=ExtResource("10_vtaks")]
-position = Vector2(996, -63)
+[node name="Slime_boss" parent="." unique_id=1009857813 instance=ExtResource("10_vtaks")]
+position = Vector2(994, -75)

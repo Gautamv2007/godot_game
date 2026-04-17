@@ -15,9 +15,21 @@ run/main_scene="uid://3tmuv2vll7w0"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
+[audio]
+
+buses/default_bus_layout="uid://dsm2o2md7dd2k"
+
+[autoload]
+
+Music="*uid://bbtlrabwpbhnl"
+
 [dotnet]
 
 project/assembly_name="First_Game"
+
+[editor]
+
+version_control/autoload_on_startup=true
 
 [input]
 

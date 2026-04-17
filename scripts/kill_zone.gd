@@ -1,30 +1,17 @@
-#extends Area2D
-#
-#@export var damage_amount_slime: int = 10 # You can change this in the inspector
-#@export var damage_amount_slime_boss: int = 25
-#func _on_body_entered(body: Node2D) -> void:
-	## If player is attacking → destroy slime instead
-	#if body.has_method("is_attacking") or "is_attacking" in body:
-		#if body.is_attacking:
-			#get_parent().die()
-			#return
-#
-	## Otherwise → Player takes damage
-	#if body.has_method("take_damage"):
-		#body.take_damage(damage_amount_slime)
-		
 extends Area2D
 
-# We only need ONE variable. Because it has @export, we can 
-# change this number in the Inspector for different enemies!
+# Damage the boss deals to the player
+@export var damage_amount: int = 25 
 
-@export var damage_amount: int = 10
+# NEW: Damage the player deals to the boss per hit
+@export var player_damage_to_boss: int = 20 
 
 func _on_body_entered(body: Node2D) -> void:
-	# If player is attacking → destroy enemy instead
+	# If player is attacking → Boss takes damage instead of dying instantly
 	if body.has_method("is_attacking") or "is_attacking" in body:
 		if body.is_attacking:
-			get_parent().die()
+			if get_parent().has_method("take_damage"):
+				get_parent().take_damage(player_damage_to_boss)
 			return
 
 	# Otherwise → Player takes damage
