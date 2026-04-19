@@ -7,10 +7,15 @@ signal healthChanged
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 
+
+@onready var coin_label: Label = %Label
+
 var is_attacking := false
 var is_hurt := false
 var is_dead := false
 var waiting_for_input := false
+
+var jump_count := 0
 
 @export var maxHealth = 100
 @onready var currentHealth:int = maxHealth
@@ -29,6 +34,14 @@ func _physics_process(delta: float) -> void:
 		
 		# Create the "YOU DIED" screen
 		var canvas = CanvasLayer.new() 
+		
+		# --- NEW: Create a White Background ---
+		var bg = ColorRect.new()
+		bg.color = Color.WHITE # Set the background color to white
+		bg.set_anchors_preset(Control.PRESET_FULL_RECT) # Make it fill the entire screen
+		canvas.add_child(bg) # Add the background FIRST so it stays behind the text
+		
+		# Create the Text
 		var label = Label.new()
 		label.text = "YOU DIED\nPress Enter to return to Main Menu" 
 		
@@ -38,7 +51,7 @@ func _physics_process(delta: float) -> void:
 		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		label.set_anchors_preset(Control.PRESET_FULL_RECT) 
 		
-		canvas.add_child(label)
+		canvas.add_child(label) # Add the text SECOND so it sits on top of the background
 		add_child(canvas)
 		
 		# Freeze the player in the air
@@ -64,8 +77,25 @@ func _physics_process(delta: float) -> void:
 			return
 
 	# Jump
-	if Input.is_action_just_pressed("jump") and is_on_floor():
-		velocity.y = JUMP_VELOCITY
+	# --- NEW: Reset jump count when we hit the ground ---
+	if is_on_floor():
+		jump_count = 0
+
+	# --- UPDATED: Double Jump Logic ---
+	if Input.is_action_just_pressed("jump"):
+		if is_on_floor():
+			# First jump (single press) -> Half the jumping power
+			# Note: We divide by 2.0 to make sure it stays a float!
+			velocity.y = JUMP_VELOCITY / (1.5)
+			jump_count = 1
+		elif jump_count == 1:
+			# Second jump (double press in mid-air) -> Full jumping power
+			velocity.y = JUMP_VELOCITY
+			jump_count = 2
+			
+			# Restart the jump animation so the second jump feels snappy
+			animated_sprite.stop()
+			animated_sprite.play("jump")
 
 	# Attack (trigger once)
 	if Input.is_action_just_pressed("attack"):
@@ -127,3 +157,4 @@ func _on_AnimatedSprite2D_animation_finished():
 		# Go back to the main menu when the death animation finishes
 		# Make sure "res://main_menu.tscn" exactly matches your actual file name!
 		get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+ 

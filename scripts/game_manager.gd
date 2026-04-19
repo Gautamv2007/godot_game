@@ -1,11 +1,11 @@
 extends Node
+@onready var label: Label = %Label
 
-var score = 0
-@onready var label: Label = $"../CanvasLayer/Label"
+var coin_counter = 0
 
 func add_point():
-	score += 1
-	label.text = "Coins: " + str(score)
+	coin_counter += 1
+	label.text = "Coins: " + str(coin_counter)
 
 var score_by_kill = 0
 @onready var label_3: Label = $"../CanvasLayer/Label3"
