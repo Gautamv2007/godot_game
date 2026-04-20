@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://cl64xacfegs20"]
+[gd_scene format=3 uid="uid://cfx6qabtxojq"]
 
 [ext_resource type="Script" uid="uid://8i8xhrujx6dp" path="res://scripts/slime.gd" id="1_r2idg"]
 [ext_resource type="Texture2D" uid="uid://dq3jjwquhgwlv" path="res://assets/sprites/slime_purple.png" id="2_r2idg"]
@@ -77,18 +77,18 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0l8pv"]
 size = Vector2(26, 13)
 
-[node name="Slime_boss" type="Node2D" unique_id=1973231285]
+[node name="Mini_Slime_2" type="Node2D" unique_id=3271484234]
 position = Vector2(0, -12)
 script = ExtResource("1_r2idg")
-SPEED = 60
-HEALTH_REDUCE = 25
-maxHealth = 200
-damage_to_player = 10
-size_multiplier = 1.0
+SPEED = 80
+HEALTH_REDUCE = 40
+maxHealth = 80
+damage_to_player = 6
+size_multiplier = 0.7
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=289220644]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1512841526]
 position = Vector2(0, -10.851353)
-scale = Vector2(1.8541667, 1.9042795)
+scale = Vector2(1.2396, 1.272)
 sprite_frames = SubResource("SpriteFrames_v5wyi")
 animation = &"idle"
 autoplay = "idle"
@@ -98,8 +98,8 @@ offset_left = -16.0
 offset_top = -24.0
 offset_right = 18.0
 offset_bottom = -19.0
-max_value = 200.0
-value = 200.0
+max_value = 80.0
+value = 80.0
 show_percentage = false
 script = ExtResource("3_5gq7b")
 slime_boss = NodePath("..")

@@ -1,11 +1,12 @@
 extends Node2D
 
-const SPEED = 60
-const HEALTH_REDUCE = 25 
+@export var SPEED: int = 60
+@export var HEALTH_REDUCE: int = 25
+@export var maxHealth: int = 200
+@export var damage_to_player: int = 10
+@export var size_multiplier: float = 1.0
 
 signal healthChanged
-
-@export var maxHealth: int = 200
 
 var currentHealth: int 
 var direction = 1
@@ -24,7 +25,15 @@ var is_knocked_back := false
 
 func _ready():
 	currentHealth = maxHealth
-	healthChanged.emit() 
+	healthChanged.emit()
+	
+	# Apply size multiplier to the sprite
+	if size_multiplier != 1.0:
+		$AnimatedSprite2D.scale *= size_multiplier
+	
+	# Set the KillZone's damage to match this slime's damage_to_player
+	if has_node("KillZone"):
+		$KillZone.damage_amount = damage_to_player 
 
 func take_damage(amount: int):
 	if is_dead:

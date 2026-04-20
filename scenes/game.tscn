@@ -9,10 +9,8 @@
 [ext_resource type="FontFile" uid="uid://b63fpxrp16bmi" path="res://assets/fonts/PixelOperator8.ttf" id="7_u5sy4"]
 [ext_resource type="PackedScene" uid="uid://cl64xacfegs20" path="res://scenes/slime_boss.tscn" id="10_vtaks"]
 [ext_resource type="Script" uid="uid://d2kei3ecqgd6t" path="res://scripts/healthBar.gd" id="11_kvpfn"]
-
-[sub_resource type="LabelSettings" id="LabelSettings_0tnpc"]
-
-[sub_resource type="LabelSettings" id="LabelSettings_vtaks"]
+[ext_resource type="PackedScene" path="res://scenes/mini_slime_2.tscn" id="12_mini2"]
+[ext_resource type="PackedScene" path="res://scenes/mini_slime_3.tscn" id="13_mini3"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_lnu2h"]
 texture = ExtResource("2_yqjtg")
@@ -247,6 +245,18 @@ _data = {
 &"moving_tile": SubResource("Animation_vtaks")
 }
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_scoreboard"]
+bg_color = Color(0.1, 0.5, 0.2, 0.8)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.2, 1, 0.3, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
 [node name="Game" type="Node2D" unique_id=1551887781]
 
 [node name="GameManager" type="Node" parent="." unique_id=901713389]
@@ -262,40 +272,6 @@ zoom = Vector2(8, 8)
 limit_bottom = 125
 limit_smoothed = true
 position_smoothing_enabled = true
-
-[node name="Label" type="Label" parent="Player_1/Camera2D" unique_id=1041882561]
-unique_name_in_owner = true
-process_mode = 4
-clip_contents = true
-offset_left = -77.0
-offset_top = -36.0
-offset_right = 43.0
-offset_bottom = 95.000015
-focus_behavior_recursive = 1
-theme_override_colors/font_color = Color(0.043623567, 0.043623567, 0.043623567, 1)
-theme_override_fonts/font = ExtResource("7_u5sy4")
-theme_override_font_sizes/font_size = 8
-text = "Coins: 0"
-label_settings = SubResource("LabelSettings_0tnpc")
-horizontal_alignment = 1
-metadata/_edit_use_anchors_ = true
-
-[node name="Label3" type="Label" parent="Player_1/Camera2D" unique_id=1663810944]
-anchors_preset = -1
-anchor_top = -0.0030864198
-anchor_right = 0.264
-offset_left = -70.0
-offset_top = -23.0
-offset_right = 43.0
-offset_bottom = 108.0
-theme_override_colors/font_color = Color(0.043623567, 0.043623567, 0.043623567, 1)
-theme_override_fonts/font = ExtResource("7_u5sy4")
-theme_override_font_sizes/font_size = 64
-text = "Score: 0"
-label_settings = SubResource("LabelSettings_vtaks")
-horizontal_alignment = 1
-autowrap_mode = 2
-metadata/_edit_use_anchors_ = true
 
 [node name="TileMap" type="TileMap" parent="." unique_id=30587787]
 tile_set = SubResource("TileSet_lbhrr")
@@ -380,6 +356,54 @@ theme_override_colors/font_color = Color(0.012617188, 0.012617188, 0.012617188, 
 theme_override_fonts/font = ExtResource("7_u5sy4")
 text = "Space to Jump"
 
+[node name="ScoreboardUI" type="CanvasLayer" parent="." unique_id=1100000001]
+layer = 10
+
+[node name="ScorePanel" type="PanelContainer" parent="ScoreboardUI" unique_id=1100000002]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = 50.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_scoreboard")
+
+[node name="MarginContainer" type="MarginContainer" parent="ScoreboardUI/ScorePanel" unique_id=1100000003]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ScoreboardUI/ScorePanel/MarginContainer" unique_id=1100000004]
+layout_mode = 2
+
+[node name="CoinsLabel" type="Label" parent="ScoreboardUI/ScorePanel/MarginContainer/HBoxContainer" unique_id=1100000005]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("7_u5sy4")
+theme_override_font_sizes/font_size = 18
+text = "💰 COINS: 0"
+
+[node name="Spacer" type="Control" parent="ScoreboardUI/ScorePanel/MarginContainer/HBoxContainer" unique_id=1100000006]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ScoreLabel" type="Label" parent="ScoreboardUI/ScorePanel/MarginContainer/HBoxContainer" unique_id=1100000007]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.2, 0.8, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("7_u5sy4")
+theme_override_font_sizes/font_size = 18
+text = "⚔️ SCORE: 0"
+
 [node name="CanvasLayer2" type="CanvasLayer" parent="." unique_id=670874264]
 
 [node name="ProgressBar" type="ProgressBar" parent="CanvasLayer2" unique_id=812341460]
@@ -391,4 +415,10 @@ value = 100.0
 script = ExtResource("11_kvpfn")
 
 [node name="Slime_boss" parent="." unique_id=1009857813 instance=ExtResource("10_vtaks")]
-position = Vector2(994, -75)
+position = Vector2(994, 45)
+
+[node name="Mini_Slime_2" parent="." unique_id=1111111112 instance=ExtResource("12_mini2")]
+position = Vector2(523, 76)
+
+[node name="Mini_Slime_3" parent="." unique_id=1111111113 instance=ExtResource("13_mini3")]
+position = Vector2(627, 75)

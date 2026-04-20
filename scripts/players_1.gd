@@ -15,8 +15,6 @@ var is_hurt := false
 var is_dead := false
 var waiting_for_input := false
 
-var jump_count := 0
-
 @export var maxHealth = 100
 @onready var currentHealth:int = maxHealth
 
@@ -77,25 +75,9 @@ func _physics_process(delta: float) -> void:
 			return
 
 	# Jump
-	# --- NEW: Reset jump count when we hit the ground ---
-	if is_on_floor():
-		jump_count = 0
-
-	# --- UPDATED: Double Jump Logic ---
 	if Input.is_action_just_pressed("jump"):
 		if is_on_floor():
-			# First jump (single press) -> Half the jumping power
-			# Note: We divide by 2.0 to make sure it stays a float!
-			velocity.y = JUMP_VELOCITY / (1.5)
-			jump_count = 1
-		elif jump_count == 1:
-			# Second jump (double press in mid-air) -> Full jumping power
 			velocity.y = JUMP_VELOCITY
-			jump_count = 2
-			
-			# Restart the jump animation so the second jump feels snappy
-			animated_sprite.stop()
-			animated_sprite.play("jump")
 
 	# Attack (trigger once)
 	if Input.is_action_just_pressed("attack"):
@@ -144,8 +126,22 @@ func take_damage(amount: int):
 		animated_sprite.play("hit") # Make sure this matches your hit animation name!
 
 func die():
+	if is_dead:
+		return
+		
 	is_dead = true
-	animated_sprite.play("death") # Make sure this matches your death animation name!
+	waiting_for_input = true  # Prevent any further input processing
+	animated_sprite.play("death")
+	
+	# Wait for death animation to finish or timeout after 2 seconds
+	await get_tree().create_timer(2.0).timeout
+	
+	# Save stats and transition to game over
+	if has_node("/root/Game/GameManager"):
+		var game_manager = get_node("/root/Game/GameManager")
+		GameStats.set_final_stats(game_manager.score_by_kill, game_manager.coin_counter)
+	
+	get_tree().change_scene_to_file("res://scenes/game_over.tscn")
 
 # Make sure this signal is connected via the Node panel in the editor!
 func _on_AnimatedSprite2D_animation_finished():
@@ -154,7 +150,10 @@ func _on_AnimatedSprite2D_animation_finished():
 	elif animated_sprite.animation == "hit":
 		is_hurt = false
 	elif animated_sprite.animation == "death":
-		# Go back to the main menu when the death animation finishes
-		# Make sure "res://main_menu.tscn" exactly matches your actual file name!
-		get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+		# Get game manager stats and pass to GameStats autoload
+		if has_node("/root/Game/GameManager"):
+			var game_manager = get_node("/root/Game/GameManager")
+			GameStats.set_final_stats(game_manager.score_by_kill, game_manager.coin_counter)
+		# Go to the game over screen when the death animation finishes
+		get_tree().change_scene_to_file("res://scenes/game_over.tscn")
  

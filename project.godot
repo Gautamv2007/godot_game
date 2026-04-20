@@ -22,6 +22,7 @@ buses/default_bus_layout="uid://dsm2o2md7dd2k"
 [autoload]
 
 Music="*uid://bbtlrabwpbhnl"
+GameStats="*res://scripts/GameStats.gd"
 
 [dotnet]
 
